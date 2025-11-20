@@ -26,7 +26,21 @@ int main(void)
   HAL_GPIO_WritePin(Band_vor_GPIO_Port,Band_vor_Pin,1);
   while (1)
   {
+    // Förderband dreht vorwärts
+    // ToDo: Pin A8 auf HIGH setzen
+    HAL_GPIO_WritePin(Band_vor_GPIO_Port,Band_vor_Pin,1);
 
+    // Das Programm wird um 1000 ms verzögert
+    // ToDo: Delay von 1000 ms einfügen
+    HAL_Delay(1000);
+
+    // Das Förderband wird angehalten
+    // ToDo: Pin A8 auf LOW setzen
+    HAL_GPIO_WritePin(Band_vor_GPIO_Port,Band_vor_Pin,0);
+
+    // Das Programm wird um 1000 ms verzögert
+    HAL_Delay(1000);
+    // ToDo: Delay von 1000 ms einfügen
   }
 }
 
@@ -90,6 +104,7 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
+
   }
 }
 
