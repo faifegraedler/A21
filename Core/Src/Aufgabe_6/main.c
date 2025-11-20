@@ -50,7 +50,7 @@ int main(void)
     if (status == 0)
     {
       // Prüfen, ob der Endlagesensor am Bandanfang aktiv ist
-      if (/*ToDo: Prüfen ob Pin A10 HIGH ist*/)
+      if (HAL_GPIO_ReadPin(Endlage_Bandanfang_GPIO_Port,Endlage_Bandanfang_Pin)==1)
       {
         // Werkstück am Bandanfang eingelegt
         HAL_GPIO_WritePin(Vorwaertsfahrt_GPIO_Port, Vorwaertsfahrt_Pin, 1);
@@ -61,9 +61,10 @@ int main(void)
 
         // Fahre zurück bis zum Endlagesensor am Bandanfang
         // ToDo: Rückwärtsfahrt aktivieren
-        while (/*ToDo: Prüfen ob Pin A10 HIGH ist*/))
+        while (HAL_GPIO_ReadPin(Endlage_Bandanfang_GPIO_Port,Endlage_Bandanfang_Pin)==0)
         {
           // Verweile hier wenn Endlagesensor am Bandanfang nicht HIGH ist
+          HAL_GPIO_WritePin(Rueckwaertsfahrt_GPIO_Port, Rueckwaertsfahrt_Pin, 1);
         }
         // Anhalten
         HAL_GPIO_WritePin(Rueckwaertsfahrt_GPIO_Port, Rueckwaertsfahrt_Pin, 0);
@@ -83,7 +84,7 @@ int main(void)
     }
     if (status == 2)
     {
-      uint8_t mittelposition = /*ToDo: Wert ermitteln (Tipp: Werte zwischen 0 - 50 ausprobieren)*/;
+      uint8_t mittelposition = 25/*ToDo: Wert ermitteln (Tipp: Werte zwischen 0 - 50 ausprobieren)*/;
       if (nInkremente >= mittelposition)
       {
         // Förderband anhalten und in Status 3 wechseln
@@ -93,13 +94,32 @@ int main(void)
     if (status == 3)
     {
       // ToDo: Implementieren
+      HAL_GPIO_WritePin(Rueckwaertsfahrt_GPIO_Port, Rueckwaertsfahrt_Pin, 0);
+      HAL_Delay(5000);
+      status = 4;
     }
+    if (status == 4) {
+      while (HAL_GPIO_ReadPin(Endlage_Bandende_GPIO_Port,Endlage_Bandende_Pin)==0) {
+        HAL_GPIO_WritePin(Vorwaertsfahrt_GPIO_Port, Vorwaertsfahrt_Pin, 1);
+      }
+      HAL_GPIO_WritePin(Vorwaertsfahrt_GPIO_Port, Vorwaertsfahrt_Pin, 0);
+      HAL_Delay(2000);
+      status = 5;
+    }
+    if (status == 5) {
+      while (HAL_GPIO_ReadPin(Endlage_Bandanfang_GPIO_Port,Endlage_Bandanfang_Pin)==0) {
+        HAL_GPIO_WritePin(Rueckwaertsfahrt_GPIO_Port, Rueckwaertsfahrt_Pin, 1);
+      }
+      HAL_GPIO_WritePin(Rueckwaertsfahrt_GPIO_Port, Rueckwaertsfahrt_Pin, 0);
+      HAL_Delay(2000);
+    }
+
   }
 
 }
 
 void runInkrementSensorCheck() {
-  if(/*ToDo: Abfrage ob optischer Inkrementalgeber HIGH ist*/) {
+  if(HAL_GPIO_ReadPin(Inkrementalsensor_GPIO_Port,Inkrementalsensor_Pin)==1) {
     if(sensorSchwarz == 0) {
       // Flanke erkannt
       if(HAL_GPIO_ReadPin(Vorwaertsfahrt_GPIO_Port, Vorwaertsfahrt_Pin) == 1) {
