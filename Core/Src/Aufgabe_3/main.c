@@ -14,17 +14,23 @@ int main(void)
   SystemClock_Config();
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  int counter = 0;
 
   while (1)
   {
     // Prüfen, ob der Endlagesensor am Bandanfang aktiv ist
     if (HAL_GPIO_ReadPin(Endlage_Bandanfang_GPIO_Port,Endlage_Bandanfang_Pin)==1) {
       // Der Sensor ist aktiv, daher das Förderband vorwärts drehen
+      counter++;
       HAL_GPIO_WritePin(Vorwaertsfahrt_GPIO_Port, Vorwaertsfahrt_Pin, 1);
+
     }
 
     // Prüfen, ob der Endlagesensor am Bandende aktiv ist
     if (HAL_GPIO_ReadPin(Endlage_Bandende_GPIO_Port,Endlage_Bandende_Pin)==1) {
+      counter--;
+    }
+    if (counter == 0) {
       HAL_GPIO_WritePin(Vorwaertsfahrt_GPIO_Port, Vorwaertsfahrt_Pin, 0);
     }
   }
