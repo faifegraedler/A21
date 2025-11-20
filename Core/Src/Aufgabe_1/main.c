@@ -18,10 +18,12 @@ int main(void)
   SystemClock_Config();
   /* Initialisierung der Pins */
   MX_GPIO_Init();
+  #define Band_vor_Pin GPIO_PIN_8
+  #define Band_vor_GPIO_Port GPIOA
 
   // Förderband dreht vorwärts
   // ToDo: Pin A8 auf HIGH setzen
-
+  HAL_GPIO_WritePin(Band_vor_GPIO_Port,Band_vor_Pin,1);
   while (1)
   {
 
@@ -73,11 +75,11 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(Vorwaertsfahrt_GPIO_Port, Vorwaertsfahrt_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : Vorwaertsfahrt_Pin */
-  GPIO_InitStruct.Pin = ;
-  GPIO_InitStruct.Mode = ;
+  GPIO_InitStruct.Pin = Band_vor_Pin ;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP ;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(, &GPIO_InitStruct);
+  HAL_GPIO_Init(Band_vor_GPIO_Port, &GPIO_InitStruct);
 }
 
 
