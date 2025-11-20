@@ -12,7 +12,7 @@ endif()
 set(CMAKE_PROJECT_NAME ue2)
 
 # Aufgabe setzen
-set(CURRENT_TASK Aufgabe_3)
+set(CURRENT_TASK Aufgabe_5)
 
 message(STATUS "Aktuelle Aufgabe: ${CURRENT_TASK}")
 

@@ -44,7 +44,7 @@ int main(void)
   while (1)
   {
     // Prüfen, ob der Endlagesensor am Bandanfang aktiv ist
-    if (/*ToDo: Prüfen ob Pin A10 HIGH ist*/) {
+    if (HAL_GPIO_ReadPin(Endlage_Bandanfang_GPIO_Port,Endlage_Bandanfang_Pin)==1) {
       /*
        * Prüfen ob anfangBelegt == 0 ist. Falls ja, dann handelt
        * es sich um eine steigende Flanke am Sensor.
@@ -63,7 +63,7 @@ int main(void)
     }
 
     // Prüfen, ob der Endlagesensor am Bandende aktiv ist
-    if (/*ToDo: Prüfen ob Pin B3 HIGH ist*/) {
+    if (HAL_GPIO_ReadPin(Endlage_Bandende_GPIO_Port,Endlage_Bandende_Pin)==1) {
       // Es befindet sich ein Werkstück im Endbereich, endeBelegt auf 1 setzen
       BandendeBelegt = 1;
     } else {
@@ -88,10 +88,12 @@ int main(void)
      * und kein Werkstück im Endbereich ist (BandendeBelegt == 0), dann
      * soll das Förderband vorwärts drehen
      */
-    if (/*ToDo: Logik implementieren*/) {
+    if (CounterWerkstueck > 0 && BandendeBelegt == 0) {
       // Förderband dreht vorwärts
+      HAL_GPIO_WritePin(Vorwaertsfahrt_GPIO_Port, Vorwaertsfahrt_Pin, 1);
     } else {
       // Förderband anhalten
+      HAL_GPIO_WritePin(Vorwaertsfahrt_GPIO_Port, Vorwaertsfahrt_Pin, 0);
     }
   }
 }
@@ -105,11 +107,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   {
     // Falls das Förderband vorwärts dreht, dann iCounter hochzählen
     // ToDo: Abfrage mit Logik implementieren
+    if (HAL_GPIO_ReadPin(Vorwaertsfahrt_GPIO_Port,Vorwaertsfahrt_Pin)==1) {
+      iCounter++;
+    }
 
     // Initialisierungsfunktion des Timer 16 enthält die konfigurierten Überlaufzeiten
     // ToDo: Ausrechnen wie viele Überläufe für 5 Sekunden passieren müssen
 
-    if(iCounter > /* Anzahl Überläufe */) {
+    if(iCounter >500 /* Anzahl Überläufe */) {
 
       if(CounterWerkstueck > 0) {
         CounterWerkstueck = 0;
