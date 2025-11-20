@@ -18,13 +18,13 @@ int main(void)
   while (1)
   {
     // Prüfen, ob der Endlagesensor am Bandanfang aktiv ist
-    if (/*ToDo: Prüfen ob Pin A10 HIGH ist*/) {
+    if (HAL_GPIO_ReadPin(Endlage_Bandanfang_GPIO_Port,Endlage_Bandanfang_Pin)==1) {
       // Der Sensor ist aktiv, daher das Förderband vorwärts drehen
       HAL_GPIO_WritePin(Vorwaertsfahrt_GPIO_Port, Vorwaertsfahrt_Pin, 1);
     }
 
     // Prüfen, ob der Endlagesensor am Bandende aktiv ist
-    if (/*ToDo: Prüfen ob Pin B3 HIGH ist*/) {
+    if (HAL_GPIO_ReadPin(Endlage_Bandende_GPIO_Port,Endlage_Bandende_Pin)==1) {
       HAL_GPIO_WritePin(Vorwaertsfahrt_GPIO_Port, Vorwaertsfahrt_Pin, 0);
     }
   }
@@ -82,16 +82,16 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(Vorwaertsfahrt_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : Endlage_Bandanfang_Pin */
-  GPIO_InitStruct.Pin = ;
-  GPIO_InitStruct.Mode = ;
+  GPIO_InitStruct.Pin = Endlage_Bandanfang_Pin ;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(, &GPIO_InitStruct);
+  HAL_GPIO_Init(Endlage_Bandanfang_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : Endlage_Bandende_Pin */
-  GPIO_InitStruct.Pin = ;
-  GPIO_InitStruct.Mode = ;
+  GPIO_InitStruct.Pin = Endlage_Bandende_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT ;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(, &GPIO_InitStruct);
+  HAL_GPIO_Init(Endlage_Bandende_GPIO_Port, &GPIO_InitStruct);
 }
 
 void Error_Handler(void)
